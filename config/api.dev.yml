@@ -1,0 +1,21 @@
+# app
+app:
+  host: 0.0.0.0
+  port: 8000
+
+# postgres
+postgres:
+  user: postgres
+  password: postgres
+  database: postgres
+  port: 5432
+  host: postgres
+
+# MongoDB
+mongodb:
+  user: vc-user
+  password: logi123
+  database: versiondb
+  port: 27017
+  host: mongohost
+

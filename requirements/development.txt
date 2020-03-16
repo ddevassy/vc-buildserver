@@ -1,0 +1,13 @@
+-r documentation.txt
+-r production.txt
+aiohttp-devtools==0.11
+aiohttp_apispec==2.1.0
+black==18.9b0
+flake8==3.7.5
+git+https://github.com/Arfey/aiohttp-debugtoolbar.git
+motor==2.1.0
+
+mypy==0.670
+pytest==5.2.0
+pytest-aiohttp==0.3.0
+pytest-cov==2.6.1
