@@ -10,3 +10,11 @@ postgres:
   database: postgres_test
   port: 5432
   host: postgres
+
+# MongoDB
+mongodb:
+  user: vc-user
+  password: logi123
+  database: versiondb
+  port: 27017
+  host: mongodb

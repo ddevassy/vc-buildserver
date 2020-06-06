@@ -13,7 +13,7 @@ from aiohttp_apispec import setup_aiohttp_apispec
 from .common.log_utils import _setup_logging
 from vc_buildserver.database import init_mongodb
 from vc_buildserver.database import init_pg
-from vc_buildserver.routes import init_routes
+from vc_buildserver.routes import init_routes, error_middleware
 from vc_buildserver.utils.common import init_config
 
 
@@ -35,7 +35,9 @@ def init_jinja2(app: web.Application) -> None:
 async def init_app(config: Optional[List[str]] = None) -> web.Application:
     _setup_logging()
     log.info(f'Setting up init_app Logging')
-    app = web.Application()
+    app = web.Application(
+        client_max_size=64 * 1024 ** 2, middlewares=[error_middleware]
+    )
     # init docs with all parameters, usual for ApiSpec
     setup_aiohttp_apispec(
         app=app,
@@ -47,8 +49,8 @@ async def init_app(config: Optional[List[str]] = None) -> web.Application:
 
     init_jinja2(app)
     init_config(app, config=config)
-    await init_routes(app)
     await init_mongodb(app)
+    await init_routes(app)
     app.cleanup_ctx.extend([
         init_pg,
     ])

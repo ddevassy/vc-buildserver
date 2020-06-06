@@ -17,6 +17,7 @@ services:
     restart: always
     volumes:
       - .:/app:delegated
+      - /var/log/:/var/log/
     depends_on:
       - postgres
       - mongodb
@@ -36,16 +37,19 @@ services:
           - 5432
 
   mongodb:
-      image: mongo:latest
+      image: 'mongo:latest'
       container_name: vc_buildserver_mongodb
       environment:
-        - MONGO_DATA_DIR=/data/db
-        - MONGO_LOG_DIR=/dev/null
+        - MONGO_DATA_DIR=/usr/local/var/mongodb/
+        - MONGO_LOG_DIR=/usr/local/var/log/mongodb
+        - MONGO_INITDB_ROOT_USERNAME="vc-user"
+        - MONGO_INITDB_ROOT_PASSWORD="logi123"
       volumes:
-        - ./data/db:/data/db
+        - /usr/local/var/mongodb/:/usr/local/var/mongodb/
+
       ports:
         - 27017:27017
-      command: mongod --smallfiles --logpath=/dev/null # --quiet
+
 
   test:
     <<: *app

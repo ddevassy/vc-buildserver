@@ -17,5 +17,5 @@ mongodb:
   password: logi123
   database: versiondb
   port: 27017
-  host: mongohost
+  host: mongodb
 

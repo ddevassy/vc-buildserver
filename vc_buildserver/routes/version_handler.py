@@ -17,28 +17,31 @@ from aiohttp_apispec import (
 )
 
 log = logging.getLogger(__name__)
-tags = ['Build Server Routes']
+tags = ['Version Handler Routes']
 # Route definition table
 routes = web.RouteTableDef()
 
 
-def handle_json_error(
-    func: Callable[[web.Request], Awaitable[web.Response]],
-) -> Callable[[web.Request], Awaitable[web.Response]]:
-    async def handler(request: web.Request) -> web.Response:
-        try:
-            return await func(request)
-        except asyncio.CancelledError:
-            raise
-        except Exception as ex:
-            return web.json_response(
-                {'status': 'failed', 'reason': str(ex)}, status=400,
-            )
+async def init_version_routes(app, prefix):
+    """
 
-    return handler
+    :param app:
+    :param prefix:
+    :return:
+    """
+    try:
+        app.router.add_get(
+            prefix + '/{product}/version/latest', get_latest_version, name='get_latest_version',
+        )
+        app.router.add_get(
+            prefix + '/{product}/version', get_all_version, name='get_all_version'
+        )
+        app.router.add_post('/{product}/version', new_version, name='new_version')
 
+    except Exception as e:
+        log.error(f'Error is {e}')
+        raise
 
-@handle_json_error
 @docs(tags=tags, summary='Get the latest Version')
 def get_latest_version(request):
     """
@@ -61,7 +64,6 @@ def get_latest_version(request):
         return json_response(version)
 
 
-@handle_json_error
 @docs(tags=tags, summary='Get the all the Version info from the Mongo DB which is specific to a branch')
 def get_all_version(request):
     """
@@ -84,7 +86,6 @@ def get_all_version(request):
         return Response(text=str(version))
 
 
-@handle_json_error
 @docs(tags=tags, summary='Get the component versions of specific fw version - branch has to be mentioned in headers')
 def get_specific_version(request):
     """
@@ -109,7 +110,6 @@ def get_specific_version(request):
         return Response(text=str(version))
 
 
-@handle_json_error
 @docs(tags=tags, summary='Get the New version. either appending the existing version if nothing is specified else use what is mentioned the body')
 async def new_version(request):
     """
@@ -161,7 +161,6 @@ async def new_version(request):
         return Response(text=str(id))
 
 
-@handle_json_error
 @docs(tags=tags, summary='Update the component versions into the existing new version')
 def update_version(request):
     """
@@ -193,7 +192,6 @@ def update_version(request):
         return json_response(version)
 
 
-@handle_json_error
 @docs(tags=tags, summary='Bulk update')
 def bulk_update(request):
     """
@@ -221,8 +219,6 @@ def bulk_update(request):
     finally:
         return json_response(None)
 
-
-@handle_json_error
 @docs(tags=tags, summary='Remove all the versions from a collection specific to a branch')
 def remove_all_versions(request):
     """

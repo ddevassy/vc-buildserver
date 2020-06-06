@@ -30,9 +30,9 @@ def get_login():
 
     """
     if get_platform().startswith('win'):
-        return os.environ.get('USERNAME', 'Unknown')
+        return os.environ.get('USERNAME', 'build_server')
     else:
-        return os.environ.get('USER', 'Unknown')
+        return os.environ.get('USER', 'build_server')
 
 
 def get_platform():
