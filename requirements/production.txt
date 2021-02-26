@@ -1,4 +1,4 @@
-aiohttp==3.5.4
+aiohttp==3.7.4
 aiohttp_apispec==2.1.0
 aiohttp_jinja2==1.1.0
 aiopg[sa]==0.16.0
